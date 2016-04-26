@@ -172,6 +172,8 @@ int main(int argc, const char *argv[]) {
         opts.scoped_enums = true;
       } else if(arg == "--gen-mutable") {
         opts.mutable_buffer = true;
+      } else if(arg == "--everything-required") {
+        opts.everything_required = true;
       } else if(arg == "--gen-name-strings") {
         opts.generate_name_strings = true;
       } else if(arg == "--gen-all") {

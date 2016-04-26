@@ -130,7 +130,7 @@ endif()
 include_directories(include)
 
 if(FLATBUFFERS_BUILD_FLATLIB)
-add_library(flatbuffers STATIC ${FlatBuffers_Library_SRCS})
+  add_library(flatbuffers STATIC ${FlatBuffers_Library_SRCS})
 endif()
 
 if(FLATBUFFERS_BUILD_FLATC)
@@ -140,6 +140,8 @@ endif()
 if(FLATBUFFERS_BUILD_FLATHASH)
   add_executable(flathash ${FlatHash_SRCS})
 endif()
+
+add_executable(resource-generator EXCLUDE_FROM_ALL ${CMAKE_CURRENT_SOURCE_DIR}/helpers/resource_generator.cpp)
 
 function(compile_flatbuffers_schema_to_cpp SRC_FBS)
   get_filename_component(SRC_FBS_DIR ${SRC_FBS} PATH)
@@ -158,6 +160,21 @@ function(compile_flatbuffers_schema_to_binary SRC_FBS)
     COMMAND "${FLATBUFFERS_FLATC_EXECUTABLE}" -b --schema -o "${SRC_FBS_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/${SRC_FBS}"
     DEPENDS flatc)
 endfunction()
+
+function(compile_flatbuffers_to_resource_header SRC_FBS TARGET_HEADER DEPS)
+  get_filename_component(TARGET_DIR ${TARGET_HEADER} PATH)
+  file(MAKE_DIRECTORY ${TARGET_DIR})
+  add_custom_command(
+    OUTPUT ${TARGET_HEADER}
+    COMMAND "${resource-generator-command}" "${SRC_FBS}" "${TARGET_HEADER}"
+    DEPENDS resource-generator ${DEPS})
+endfunction()
+
+get_directory_property(HAS_PARENT PARENT_DIRECTORY)
+if(HAS_PARENT)
+  set(resource-generator-command "resource-generator" PARENT_SCOPE)
+  set(flatc-command "flatc" PARENT_SCOPE)
+endif()
 
 if(FLATBUFFERS_BUILD_TESTS)
   compile_flatbuffers_schema_to_cpp(tests/monster_test.fbs)

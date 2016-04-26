@@ -588,7 +588,10 @@ CheckedError Parser::ParseField(StructDef &struct_def) {
   }
   if (field->deprecated && struct_def.fixed)
     return Error("can't deprecate fields in a struct");
-  field->required = field->attributes.Lookup("required") != nullptr;
+  field->required = (opts.everything_required &&
+                     !struct_def.fixed &&
+                     !IsScalar(field->value.type.base_type)) ||
+                    field->attributes.Lookup("required") != nullptr;
   if (field->required && (struct_def.fixed ||
                          IsScalar(field->value.type.base_type)))
     return Error("only non-scalar fields in tables may be 'required'");

@@ -15,6 +15,8 @@
 # General function to create FlatBuffer build rules for the given list of
 # schemas.
 #
+# commandline_options: Additional command-line options to pass to flatc
+#
 # flatbuffers_schemas: A list of flatbuffer schema files to process.
 #
 # schema_include_dirs: A list of schema file include directories, which will be
@@ -47,14 +49,14 @@
 # IMPORTANT: Make sure you quote all list arguments you pass to this function!
 # Otherwise CMake will only pass in the first element.
 # Example: build_flatbuffers("${fb_files}" "${include_dirs}" target_name ...)
-function(build_flatbuffers flatbuffers_schemas
+function(build_flatbuffers commandline_options
+                           flatbuffers_schemas
                            schema_include_dirs
                            custom_target_name
                            additional_dependencies
                            generated_includes_dir
                            binary_schemas_dir
                            copy_text_schemas_dir)
-
   # Test if including from FindFlatBuffers
   if(FLATBUFFERS_FLATC_EXECUTABLE)
     set(FLATC_TARGET "")
@@ -86,7 +88,7 @@ function(build_flatbuffers flatbuffers_schemas
       set(generated_include ${generated_includes_dir}/${filename}_generated.h)
       add_custom_command(
         OUTPUT ${generated_include}
-        COMMAND ${FLATC} --gen-mutable
+        COMMAND ${FLATC} --gen-mutable "${commandline_options}"
         -o ${generated_includes_dir}
         ${include_params}
         -c ${schema}
@@ -98,7 +100,7 @@ function(build_flatbuffers flatbuffers_schemas
       set(binary_schema ${binary_schemas_dir}/${filename}.bfbs)
       add_custom_command(
         OUTPUT ${binary_schema}
-        COMMAND ${FLATC} -b --schema
+        COMMAND ${FLATC} -b --schema "${commandline_options}"
         -o ${binary_schemas_dir}
         ${include_params}
         ${schema}
