@@ -563,9 +563,6 @@ inline size_t PaddingBytes(size_t buf_size, size_t scalar_size) {
 /// `CreateVector` functions. Do this is depth-first order to build up a tree to
 /// the root. `Finish()` wraps up the buffer ready for transport.
 class FlatBufferBuilder
-/// @cond FLATBUFFERS_INTERNAL
-FLATBUFFERS_FINAL_CLASS
-/// @endcond
 {
  public:
   /// @brief Default constructor for FlatBufferBuilder.
