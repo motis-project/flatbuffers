@@ -103,7 +103,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -pedantic -Werror -Wextra")
+      "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Werror -Wextra")
   if(NOT "${CMAKE_SYSTEM_NAME}" MATCHES "FreeBSD")
     set(CMAKE_EXE_LINKER_FLAGS
         "${CMAKE_EXE_LINKER_FLAGS} -lc++abi")
