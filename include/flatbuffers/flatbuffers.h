@@ -31,6 +31,8 @@
 #include <functional>
 #include <memory>
 
+#include "flatbuffers/namespace.h"
+
 /// @cond FLATBUFFERS_INTERNAL
 #if __cplusplus <= 199711L && \
     (!defined(_MSC_VER) || _MSC_VER < 1600) && \
@@ -102,16 +104,24 @@
 /// @endcond
 
 /// @file
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 /// @cond FLATBUFFERS_INTERNAL
 // Our default offset / size type, 32bit on purpose on 64bit systems.
 // Also, using a consistent offset type maintains compatibility of serialized
 // offset values between 32bit and 64bit systems.
+#ifdef FLATBUFFERS_64
 typedef uint64_t uoffset_t;
+#else
+typedef uint32_t uoffset_t;
+#endif
 
 // Signed offsets for references that can go in both directions.
+#ifdef FLATBUFFERS_64
 typedef int64_t soffset_t;
+#else
+typedef int32_t soffset_t;
+#endif
 
 // Offset/index used in v-tables, can be changed to uint8_t in
 // format forks to save a bit of space if desired.

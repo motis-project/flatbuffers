@@ -19,8 +19,9 @@
 #include "flatbuffers/flatbuffers.h"
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 static std::string GenType(const Type &type) {
   switch (type.base_type) {

@@ -15,8 +15,9 @@
  */
 
 #include "flatbuffers/util.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 bool FileExistsRaw(const char *name) {
   std::ifstream ifs(name);

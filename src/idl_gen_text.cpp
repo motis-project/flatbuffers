@@ -19,8 +19,9 @@
 #include "flatbuffers/flatbuffers.h"
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 static void GenStruct(const StructDef &struct_def, const Table *table,
                       int indent, const IDLOptions &opts,
@@ -296,17 +297,14 @@ bool GenerateTextFile(const Parser &parser,
   if (!parser.builder_.GetSize() || !parser.root_struct_def_) return true;
   std::string text;
   GenerateText(parser, parser.builder_.GetBufferPointer(), &text);
-  return flatbuffers::SaveFile(TextFileName(path, file_name).c_str(),
-                               text,
-                               false);
+  return SaveFile(TextFileName(path, file_name).c_str(), text, false);
 }
 
 std::string TextMakeRule(const Parser &parser,
                          const std::string &path,
                          const std::string &file_name) {
   if (!parser.builder_.GetSize() || !parser.root_struct_def_) return "";
-  std::string filebase = flatbuffers::StripPath(
-      flatbuffers::StripExtension(file_name));
+  std::string filebase = StripPath(StripExtension(file_name));
   std::string make_rule = TextFileName(path, filebase) + ": " + file_name;
   auto included_files = parser.GetIncludedFilesRecursive(
       parser.root_struct_def_->file);

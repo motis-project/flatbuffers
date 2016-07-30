@@ -1,0 +1,10 @@
+#ifndef FLATBUFFERS_NAMESPACE_H_
+#define FLATBUFFERS_NAMESPACE_H_
+
+#ifdef FLATBUFFERS_64
+#define FLATBUFFERS_NAMESPACE flatbuffers64
+#else
+#define FLATBUFFERS_NAMESPACE flatbuffers
+#endif
+
+#endif  // FLATBUFFERS_NAMESPACE_H_

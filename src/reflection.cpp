@@ -16,10 +16,11 @@
 
 #include "flatbuffers/reflection.h"
 #include "flatbuffers/util.h"
+#include "flatbuffers/namespace.h"
 
 // Helper functionality for reflection.
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 int64_t GetAnyValueI(reflection::BaseType type, const uint8_t *data) {
 # define FLATBUFFERS_GET(T) static_cast<int64_t>(ReadScalar<T>(data))

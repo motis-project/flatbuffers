@@ -40,8 +40,9 @@
 #endif
 
 #include "flatbuffers/flatbuffers.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 // Convert an integer or floating point value to a string.
 // In contrast to std::stringstream, "char" values are

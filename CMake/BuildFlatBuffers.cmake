@@ -49,7 +49,8 @@
 # IMPORTANT: Make sure you quote all list arguments you pass to this function!
 # Otherwise CMake will only pass in the first element.
 # Example: build_flatbuffers("${fb_files}" "${include_dirs}" target_name ...)
-function(build_flatbuffers commandline_options
+function(build_flatbuffers num_bits
+                           commandline_options
                            flatbuffers_schemas
                            schema_include_dirs
                            custom_target_name
@@ -58,12 +59,12 @@ function(build_flatbuffers commandline_options
                            binary_schemas_dir
                            copy_text_schemas_dir)
   # Test if including from FindFlatBuffers
-  if(FLATBUFFERS_FLATC_EXECUTABLE)
+  if(FLATBUFFERS_FLATC_${num_bits}_EXECUTABLE)
     set(FLATC_TARGET "")
-    set(FLATC ${FLATBUFFERS_FLATC_EXECUTABLE})
+    set(FLATC ${FLATBUFFERS_FLATC_${num_bits}_EXECUTABLE})
   else()
-    set(FLATC_TARGET flatc)
-    set(FLATC flatc)
+    set(FLATC_TARGET flatc${num_bits})
+    set(FLATC flatc${num_bits})
   endif()
 
   set(schema_glob "*.fbs")

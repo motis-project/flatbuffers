@@ -22,8 +22,9 @@
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
 #include "flatbuffers/code_generators.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 namespace php {
 
     static std::string GenGetter(const Type &type);

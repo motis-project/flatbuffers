@@ -23,10 +23,11 @@
 // previous version of flatc whenever this code needs to change.
 // See reflection/generate_code.sh
 #include "flatbuffers/reflection_generated.h"
+#include "flatbuffers/namespace.h"
 
 // Helper functionality for reflection.
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 // ------------------------- GETTERS -------------------------
 

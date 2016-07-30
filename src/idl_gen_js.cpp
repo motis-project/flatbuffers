@@ -20,8 +20,9 @@
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
 #include "flatbuffers/code_generators.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 namespace js {
 
 static void GenNamespaces(const Parser &parser, std::string *code_ptr,
@@ -733,8 +734,7 @@ bool GenerateJS(const Parser &parser, const std::string &path,
 std::string JSMakeRule(const Parser &parser,
                        const std::string &path,
                        const std::string &file_name) {
-  std::string filebase = flatbuffers::StripPath(
-      flatbuffers::StripExtension(file_name));
+  std::string filebase = StripPath(StripExtension(file_name));
   std::string make_rule = GeneratedFileName(path, filebase) + ": ";
   auto included_files = parser.GetIncludedFilesRecursive(file_name);
   for (auto it = included_files.begin();

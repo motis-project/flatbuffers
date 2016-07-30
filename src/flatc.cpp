@@ -15,11 +15,16 @@
  */
 
 #include "flatbuffers/flatbuffers.h"
+#include "flatbuffers/namespace.h"
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
 #include <limits>
 
 #define FLATC_VERSION "1.3.0 (" __DATE__ ")"
+
+#ifdef FLATBUFFERS_64
+namespace flatbuffers = FLATBUFFERS_NAMESPACE;
+#endif
 
 static void Error(const std::string &err, bool usage = false,
                   bool show_exe_name = true);

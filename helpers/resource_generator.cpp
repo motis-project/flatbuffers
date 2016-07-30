@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "flatbuffers/util.h"
+#include "flatbuffers/namespace.h"
 
 std::vector<std::string> dependencies(std::vector<std::string> const& lines) {
   std::vector<std::string> dep;

@@ -1,14 +1,14 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 project(FlatBuffers)
 
 # NOTE: Code coverage only works on Linux & OSX.
 option(FLATBUFFERS_CODE_COVERAGE "Enable the code coverage build option." OFF)
-option(FLATBUFFERS_BUILD_TESTS "Enable the build of tests and samples." ON)
-option(FLATBUFFERS_INSTALL "Enable the installation of targets." ON)
+option(FLATBUFFERS_BUILD_TESTS "Enable the build of tests and samples." OFF)
+option(FLATBUFFERS_INSTALL "Enable the installation of targets." OFF)
 option(FLATBUFFERS_BUILD_FLATLIB "Enable the build of the flatbuffers library" ON)
 option(FLATBUFFERS_BUILD_FLATC "Enable the build of the flatbuffers compiler" ON)
-option(FLATBUFFERS_BUILD_FLATHASH "Enable the build of flathash" ON)
+option(FLATBUFFERS_BUILD_FLATHASH "Enable the build of flathash" OFF)
 
 if(NOT FLATBUFFERS_BUILD_FLATC AND FLATBUFFERS_BUILD_TESTS)
     message(WARNING
@@ -127,13 +127,26 @@ endif()
 include_directories(include)
 
 if(FLATBUFFERS_BUILD_FLATLIB)
-  add_library(flatbuffers STATIC ${FlatBuffers_Library_SRCS})
+  add_library(flatbuffers64 STATIC ${FlatBuffers_Library_SRCS})
+  target_compile_definitions(flatbuffers64 PRIVATE FLATBUFFERS_64=1)
+
+  add_library(flatbuffers32 STATIC ${FlatBuffers_Library_SRCS})
+  target_compile_definitions(flatbuffers32 PRIVATE FLATBUFFERS_32=1)
 endif()
 
 if(FLATBUFFERS_BUILD_FLATC)
-  add_executable(flatc ${FlatBuffers_Compiler_SRCS})
-  if(NOT FLATBUFFERS_FLATC_EXECUTABLE)
-    set(FLATBUFFERS_FLATC_EXECUTABLE $<TARGET_FILE:flatc>)
+  add_executable(flatc64 ${FlatBuffers_Compiler_SRCS})
+  target_compile_definitions(flatc64 PRIVATE FLATBUFFERS_64=1)
+
+  add_executable(flatc32 ${FlatBuffers_Compiler_SRCS})
+  target_compile_definitions(flatc32 PRIVATE FLATBUFFERS_32=1)
+
+  if(NOT FLATBUFFERS_FLATC_32_EXECUTABLE)
+    set(FLATBUFFERS_FLATC_32_EXECUTABLE $<TARGET_FILE:flatc32>)
+  endif()
+
+  if(NOT FLATBUFFERS_FLATC_64_EXECUTABLE)
+    set(FLATBUFFERS_FLATC_64_EXECUTABLE $<TARGET_FILE:flatc64>)
   endif()
 endif()
 
@@ -142,24 +155,7 @@ if(FLATBUFFERS_BUILD_FLATHASH)
 endif()
 
 add_executable(resource-generator EXCLUDE_FROM_ALL ${CMAKE_CURRENT_SOURCE_DIR}/helpers/resource_generator.cpp)
-
-function(compile_flatbuffers_schema_to_cpp SRC_FBS)
-  get_filename_component(SRC_FBS_DIR ${SRC_FBS} PATH)
-  string(REGEX REPLACE "\\.fbs$" "_generated.h" GEN_HEADER ${SRC_FBS})
-  add_custom_command(
-    OUTPUT ${GEN_HEADER}
-    COMMAND "${FLATBUFFERS_FLATC_EXECUTABLE}" -c --no-includes --gen-mutable -o "${SRC_FBS_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/${SRC_FBS}"
-    DEPENDS flatc)
-endfunction()
-
-function(compile_flatbuffers_schema_to_binary SRC_FBS)
-  get_filename_component(SRC_FBS_DIR ${SRC_FBS} PATH)
-  string(REGEX REPLACE "\\.fbs$" ".bfbs" GEN_BINARY_SCHEMA ${SRC_FBS})
-  add_custom_command(
-    OUTPUT ${GEN_BINARY_SCHEMA}
-    COMMAND "${FLATBUFFERS_FLATC_EXECUTABLE}" -b --schema -o "${SRC_FBS_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/${SRC_FBS}"
-    DEPENDS flatc)
-endfunction()
+target_compile_definitions(resource-generator PRIVATE FLATBUFFERS_32=1)
 
 function(compile_flatbuffers_to_resource_header SRC_FBS TARGET_HEADER DEPS)
   get_filename_component(TARGET_DIR ${TARGET_HEADER} PATH)

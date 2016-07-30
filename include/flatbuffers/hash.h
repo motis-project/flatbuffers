@@ -21,8 +21,9 @@
 #include <cstring>
 
 #include "flatbuffers/flatbuffers.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 template <typename T>
 struct FnvTraits {

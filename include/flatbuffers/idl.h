@@ -24,12 +24,13 @@
 
 #include "flatbuffers/flatbuffers.h"
 #include "flatbuffers/hash.h"
+#include "flatbuffers/namespace.h"
 #include "flatbuffers/reflection.h"
 
 // This file defines the data types representing a parsed IDL (Interface
 // Definition Language) / schema file.
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 // The order of these matters for Is*() functions below.
 // Additionally, Parser::ParseType assumes bool..string is a contiguous range
@@ -206,8 +207,7 @@ struct Definition {
   Definition() : generated(false), defined_namespace(nullptr),
                  serialized_location(0), index(-1) {}
 
-  flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<
-    reflection::KeyValue>>>
+  Offset<Vector<Offset<reflection::KeyValue>>>
       SerializeAttributes(FlatBufferBuilder *builder,
                           const Parser &parser) const;
 

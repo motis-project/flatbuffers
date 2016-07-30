@@ -16,13 +16,15 @@
 
 // independent from idl_parser, since this code is not needed for most clients
 
+#include <algorithm>
+
 #include "flatbuffers/flatbuffers.h"
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
 #include "flatbuffers/code_generators.h"
-#include <algorithm>
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 // Convert an underscore_based_indentifier in to camelCase.
 // Also uppercases the first character if first is true.
@@ -1222,7 +1224,7 @@ bool GenerateBinary(const Parser &parser,
                     const std::string &path,
                     const std::string &file_name) {
   return !parser.builder_.GetSize() ||
-         flatbuffers::SaveFile(
+         SaveFile(
            BinaryFileName(parser, path, file_name).c_str(),
            reinterpret_cast<char *>(parser.builder_.GetBufferPointer()),
            parser.builder_.GetSize(),
@@ -1233,8 +1235,7 @@ std::string BinaryMakeRule(const Parser &parser,
                            const std::string &path,
                            const std::string &file_name) {
   if (!parser.builder_.GetSize()) return "";
-  std::string filebase = flatbuffers::StripPath(
-      flatbuffers::StripExtension(file_name));
+  std::string filebase = StripPath(StripExtension(file_name));
   std::string make_rule = BinaryFileName(parser, path, filebase) + ": " +
       file_name;
   auto included_files = parser.GetIncludedFilesRecursive(

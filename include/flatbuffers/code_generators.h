@@ -17,7 +17,9 @@
 #ifndef FLATBUFFERS_CODE_GENERATORS_H_
 #define FLATBUFFERS_CODE_GENERATORS_H_
 
-namespace flatbuffers {
+#include "flatbuffers/namespace.h"
+
+namespace FLATBUFFERS_NAMESPACE {
 
 class BaseGenerator {
  public:

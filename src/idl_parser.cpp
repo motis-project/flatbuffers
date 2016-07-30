@@ -19,8 +19,9 @@
 
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
+#include "flatbuffers/namespace.h"
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 
 const char *const kTypeNames[] = {
   #define FLATBUFFERS_TD(ENUM, IDLTYPE, CTYPE, JTYPE, GTYPE, NTYPE, PTYPE) \
@@ -1754,7 +1755,7 @@ CheckedError Parser::DoParse(const char *source, const char **include_paths,
       // Look for the file in include_paths.
       std::string filepath;
       for (auto paths = include_paths; paths && *paths; paths++) {
-        filepath = flatbuffers::ConCatPathFileName(*paths, name);
+        filepath = ConCatPathFileName(*paths, name);
         if(FileExists(filepath.c_str())) break;
       }
       if (filepath.empty())
@@ -1999,11 +2000,10 @@ Offset<reflection::Type> Type::Serialize(FlatBufferBuilder *builder) const {
                                              (enum_def ? enum_def->index : -1));
 }
 
-flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<
-  reflection::KeyValue>>>
+Offset<Vector<Offset<reflection::KeyValue>>>
     Definition::SerializeAttributes(FlatBufferBuilder *builder,
                                     const Parser &parser) const {
-  std::vector<flatbuffers::Offset<reflection::KeyValue>> attrs;
+  std::vector<Offset<reflection::KeyValue>> attrs;
   for (auto kv = attributes.dict.begin(); kv != attributes.dict.end(); ++kv) {
     auto it = parser.known_attributes_.find(kv->first);
     assert(it != parser.known_attributes_.end());

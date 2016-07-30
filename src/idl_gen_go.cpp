@@ -22,6 +22,7 @@
 #include "flatbuffers/idl.h"
 #include "flatbuffers/util.h"
 #include "flatbuffers/code_generators.h"
+#include "flatbuffers/namespace.h"
 
 #ifdef _WIN32
 #include <direct.h>
@@ -32,7 +33,7 @@
 #define PATH_SEPARATOR "/"
 #endif
 
-namespace flatbuffers {
+namespace FLATBUFFERS_NAMESPACE {
 namespace go {
 
 static std::string GenGetter(const Type &type);
