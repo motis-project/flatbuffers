@@ -163,10 +163,36 @@ std::string resource_file(
   return f;
 }
 
+std::vector<std::string> parse_namespaces(std::string const& input) {
+  std::string delim = "::";
+  std::vector<std::string> namespaces;
+
+  auto start = 0u;
+  auto end = input.find(delim);
+  while (end != std::string::npos) {
+    if (end - start > 0) {
+      namespaces.emplace_back(input.substr(start, end - start));
+    }
+    start = end + delim.length();
+    end = input.find(delim, start);
+  }
+
+  if (end - start > 0) {
+    namespaces.emplace_back(input.substr(start, end - start));
+  }
+
+  return namespaces;
+}
+
 int main(int argc, char** argv) {
-  if (argc != 3) {
-    printf("usage: %s [path to fbs root type] [target]\n", argv[0]);
+  if (argc != 3 && argc != 4) {
+    printf("usage: %s <path to fbs root type> <target> [namespace]\n", argv[0]);
     return 0;
+  }
+
+  std::vector<std::string> namespaces;
+  if (argc >= 4) {
+    namespaces = parse_namespaces(argv[3]);
   }
 
   std::string root_file = argv[1];
@@ -181,7 +207,16 @@ int main(int argc, char** argv) {
     std::ofstream out;
     out.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     out.open(argv[2], std::ofstream::out);
+
+    for (auto const& ns : namespaces) {
+      out << "namespace " << ns << " {\n";
+    }
+
     out << resource_file(order, file_contents);
+
+    for (auto i = namespaces.size(); i > 0; --i) {
+      out << "}  // namespace " << namespaces[i - 1] << "\n";
+    }
   } catch (std::ios_base::failure const&) {
     printf("could not open %s for writing\n", argv[2]);
     return 1;

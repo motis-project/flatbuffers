@@ -157,12 +157,12 @@ endif()
 add_executable(resource-generator EXCLUDE_FROM_ALL ${CMAKE_CURRENT_SOURCE_DIR}/helpers/resource_generator.cpp)
 target_compile_definitions(resource-generator PRIVATE FLATBUFFERS_32=1)
 
-function(compile_flatbuffers_to_resource_header SRC_FBS TARGET_HEADER DEPS)
+function(compile_flatbuffers_to_resource_header SRC_FBS TARGET_HEADER NAMESPACE DEPS)
   get_filename_component(TARGET_DIR ${TARGET_HEADER} PATH)
   file(MAKE_DIRECTORY ${TARGET_DIR})
   add_custom_command(
     OUTPUT ${TARGET_HEADER}
-    COMMAND "${resource-generator-command}" "${SRC_FBS}" "${TARGET_HEADER}"
+    COMMAND $<TARGET_FILE:resource-generator> "${SRC_FBS}" "${TARGET_HEADER}" "${NAMESPACE}"
     DEPENDS resource-generator ${DEPS})
 endfunction()
 
