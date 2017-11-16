@@ -80,41 +80,41 @@ set(FlatBuffers_Sample_Text_SRCS
 # source_group(Tests FILES ${FlatBuffers_Tests_SRCS})
 
 if(APPLE)
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -std=c++11 -stdlib=libc++ -Wall -pedantic -Werror -Wextra")
+  set(fbs-compiler-flags
+    "${fbs-compiler-flags} -std=c++11 -stdlib=libc++ -Wall -pedantic -Werror -Wextra")
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   if(CYGWIN)
-    set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -std=gnu++11")
+    set(fbs-compiler-flags
+      "${fbs-compiler-flags} -std=gnu++11")
   else(CYGWIN)
-    set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -std=c++0x")
+    set(fbs-compiler-flags
+      "${fbs-compiler-flags} -std=c++0x")
   endif(CYGWIN)
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -Wall -pedantic -Werror -Wextra -Werror=shadow")
+  set(fbs-compiler-flags
+    "${fbs-compiler-flags} -Wall -pedantic -Werror -Wextra -Werror=shadow")
   if (GCC_VERSION VERSION_GREATER 4.4)
-    set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -Wunused-result -Werror=unused-result")
+    set(fbs-compiler-flags
+      "${fbs-compiler-flags} -Wunused-result -Werror=unused-result")
   endif()
 
   # Certain platforms such as ARM do not use signed chars by default
   # which causes issues with certain bounds checks.
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -fsigned-char")
+  set(fbs-compiler-flags
+    "${fbs-compiler-flags} -fsigned-char")
 
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -pedantic -Werror -Wextra")
+  set(fbs-compiler-flags
+      "${fbs-compiler-flags} -std=c++11 -Wall -pedantic -Werror -Wextra")
 
   # Certain platforms such as ARM do not use signed chars by default
   # which causes issues with certain bounds checks.
-  set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -fsigned-char")
+  set(fbs-compiler-flags
+    "${fbs-compiler-flags} -fsigned-char")
 
 endif()
 
 if(FLATBUFFERS_CODE_COVERAGE)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+  set(fbs-compiler-flags "${fbs-compiler-flags} -g -fprofile-arcs -ftest-coverage")
   set(CMAKE_EXE_LINKER_FLAGS
       "${CMAKE_EXE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
 endif()
@@ -129,17 +129,21 @@ include_directories(include)
 if(FLATBUFFERS_BUILD_FLATLIB)
   add_library(flatbuffers64 STATIC ${FlatBuffers_Library_SRCS})
   target_compile_definitions(flatbuffers64 PRIVATE FLATBUFFERS_64=1)
+  target_compile_definitions(flatbuffers64 PRIVATE ${fbs-compiler-flags})
 
   add_library(flatbuffers32 STATIC ${FlatBuffers_Library_SRCS})
   target_compile_definitions(flatbuffers32 PRIVATE FLATBUFFERS_32=1)
+  target_compile_definitions(flatbuffers32 PRIVATE ${fbs-compiler-flags})
 endif()
 
 if(FLATBUFFERS_BUILD_FLATC)
   add_executable(flatc64 ${FlatBuffers_Compiler_SRCS})
   target_compile_definitions(flatc64 PRIVATE FLATBUFFERS_64=1)
+  target_compile_definitions(flatc64 PRIVATE ${fbs-compiler-flags})
 
   add_executable(flatc32 ${FlatBuffers_Compiler_SRCS})
   target_compile_definitions(flatc32 PRIVATE FLATBUFFERS_32=1)
+  target_compile_definitions(flatc32 PRIVATE ${fbs-compiler-flags})
 
   if(NOT FLATBUFFERS_FLATC_32_EXECUTABLE)
     set(FLATBUFFERS_FLATC_32_EXECUTABLE $<TARGET_FILE:flatc32>)
