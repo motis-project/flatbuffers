@@ -167,7 +167,7 @@ std::vector<std::string> parse_namespaces(std::string const& input) {
   std::string delim = "::";
   std::vector<std::string> namespaces;
 
-  auto start = 0u;
+  auto start = size_t{0};
   auto end = input.find(delim);
   while (end != std::string::npos) {
     if (end - start > 0) {
