@@ -527,7 +527,7 @@ class vector_downward {
   // which is why we're using loops rather than calling memcpy/memset.
   void push(const uint8_t *bytes, size_t num) {
     auto dest = make_space(num);
-    for (size_t i = 0; i < num; i++) dest[i] = bytes[i];
+    for (size_t i = 0; i < num; i++) dest[i] = bytes[i]; // NOLINT
   }
 
   void fill(size_t zero_pad_bytes) {
