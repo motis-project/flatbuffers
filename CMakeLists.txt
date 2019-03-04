@@ -124,26 +124,28 @@ if(BIICODE)
   return()
 endif()
 
-include_directories(include)
-
 if(FLATBUFFERS_BUILD_FLATLIB)
   add_library(flatbuffers64 STATIC ${FlatBuffers_Library_SRCS})
   target_compile_definitions(flatbuffers64 PRIVATE FLATBUFFERS_64=1)
   target_compile_options(flatbuffers64 PRIVATE ${fbs-compiler-flags})
+  target_include_directories(flatbuffers64 PUBLIC include)
 
   add_library(flatbuffers32 STATIC ${FlatBuffers_Library_SRCS})
   target_compile_definitions(flatbuffers32 PRIVATE FLATBUFFERS_32=1)
   target_compile_options(flatbuffers32 PRIVATE ${fbs-compiler-flags})
+  target_include_directories(flatbuffers32 PUBLIC include)
 endif()
 
 if(FLATBUFFERS_BUILD_FLATC)
   add_executable(flatc64 ${FlatBuffers_Compiler_SRCS})
   target_compile_definitions(flatc64 PRIVATE FLATBUFFERS_64=1)
   target_compile_options(flatc64 PRIVATE ${fbs-compiler-flags})
+  target_include_directories(flatc64 PUBLIC include)
 
   add_executable(flatc32 ${FlatBuffers_Compiler_SRCS})
   target_compile_definitions(flatc32 PRIVATE FLATBUFFERS_32=1)
   target_compile_options(flatc32 PRIVATE ${fbs-compiler-flags})
+  target_include_directories(flatc32 PUBLIC include)
 
   if(NOT FLATBUFFERS_FLATC_32_EXECUTABLE)
     set(FLATBUFFERS_FLATC_32_EXECUTABLE $<TARGET_FILE:flatc32>)
@@ -160,7 +162,8 @@ endif()
 
 add_executable(resource-generator EXCLUDE_FROM_ALL ${CMAKE_CURRENT_SOURCE_DIR}/helpers/resource_generator.cpp)
 target_compile_definitions(resource-generator PRIVATE FLATBUFFERS_32=1)
-target_compile_options(resource-generator PRIVATE ${fbs-compiler-flags}) 
+target_compile_options(resource-generator PRIVATE ${fbs-compiler-flags})
+target_include_directories(resource-generator PUBLIC include)
 
 function(compile_flatbuffers_to_resource_header SRC_FBS TARGET_HEADER NAMESPACE DEPS)
   get_filename_component(TARGET_DIR ${TARGET_HEADER} PATH)
