@@ -24,6 +24,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <vector>
 #include <set>
@@ -840,6 +841,10 @@ class FlatBufferBuilder
     PreAlign(len, sizeof(T));
   }
   /// @endcond
+
+  Offset<String> CreateString(std::string_view s) {
+    return CreateString(s.data(), s.size());
+  }
 
   /// @brief Store a string in the buffer, which can contain any binary data.
   /// @param[in] str A const char pointer to the data to be stored as a string.
