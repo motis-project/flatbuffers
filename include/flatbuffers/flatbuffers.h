@@ -189,7 +189,9 @@ template<typename T> T EndianScalar(T t) {
 }
 
 template<typename T> T ReadScalar(const void *p) {
-  return EndianScalar(*reinterpret_cast<const T *>(p));
+  T t;
+  std::memcpy(&t, p, sizeof(T));
+  return EndianScalar(t);
 }
 
 template<typename T> void WriteScalar(void *p, T t) {
