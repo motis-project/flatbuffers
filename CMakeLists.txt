@@ -104,7 +104,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
 
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
   set(fbs-compiler-flags
-      ${fbs-compiler-flags} -std=c++11 -Wall -pedantic -Werror -Wextra)
+      ${fbs-compiler-flags} -std=c++17 -Wall -pedantic -Werror -Wextra)
 
   # Certain platforms such as ARM do not use signed chars by default
   # which causes issues with certain bounds checks.
