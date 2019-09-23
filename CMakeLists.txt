@@ -81,7 +81,7 @@ set(FlatBuffers_Sample_Text_SRCS
 
 if(APPLE)
   set(fbs-compiler-flags
-    ${fbs-compiler-flags} -std=c++17 -stdlib=libc++ -Wall -pedantic -Werror -Wextra)
+    ${fbs-compiler-flags} -std=c++17 -Wall -pedantic -Werror -Wextra)
 elseif(CMAKE_COMPILER_IS_GNUCXX)
   if(CYGWIN)
     set(fbs-compiler-flags
