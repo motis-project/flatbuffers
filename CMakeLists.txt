@@ -166,6 +166,7 @@ if(FLATBUFFERS_BUILD_FLATHASH)
 endif()
 
 add_executable(resource-generator EXCLUDE_FROM_ALL ${CMAKE_CURRENT_SOURCE_DIR}/helpers/resource_generator.cpp)
+target_compile_features(resource-generator PUBLIC cxx_std_17)
 target_compile_definitions(resource-generator PRIVATE FLATBUFFERS_32=1)
 target_compile_options(resource-generator PRIVATE ${fbs-compiler-flags})
 target_include_directories(resource-generator PUBLIC include)
