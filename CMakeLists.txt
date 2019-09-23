@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.12)
 
 project(FlatBuffers)
 
@@ -126,11 +126,13 @@ endif()
 
 if(FLATBUFFERS_BUILD_FLATLIB)
   add_library(flatbuffers64 STATIC ${FlatBuffers_Library_SRCS})
+  target_compile_features(flatbuffers64 PUBLIC cxx_std_17)
   target_compile_definitions(flatbuffers64 PRIVATE FLATBUFFERS_64=1)
   target_compile_options(flatbuffers64 PRIVATE ${fbs-compiler-flags})
   target_include_directories(flatbuffers64 PUBLIC include)
 
   add_library(flatbuffers32 STATIC ${FlatBuffers_Library_SRCS})
+  target_compile_features(flatbuffers32 PUBLIC cxx_std_17)
   target_compile_definitions(flatbuffers32 PRIVATE FLATBUFFERS_32=1)
   target_compile_options(flatbuffers32 PRIVATE ${fbs-compiler-flags})
   target_include_directories(flatbuffers32 PUBLIC include)
@@ -138,11 +140,13 @@ endif()
 
 if(FLATBUFFERS_BUILD_FLATC)
   add_executable(flatc64 ${FlatBuffers_Compiler_SRCS})
+  target_compile_features(flatc64 PUBLIC cxx_std_17)
   target_compile_definitions(flatc64 PRIVATE FLATBUFFERS_64=1)
   target_compile_options(flatc64 PRIVATE ${fbs-compiler-flags})
   target_include_directories(flatc64 PUBLIC include)
 
   add_executable(flatc32 ${FlatBuffers_Compiler_SRCS})
+  target_compile_features(flatc32 PUBLIC cxx_std_17)
   target_compile_definitions(flatc32 PRIVATE FLATBUFFERS_32=1)
   target_compile_options(flatc32 PRIVATE ${fbs-compiler-flags})
   target_include_directories(flatc32 PUBLIC include)
@@ -158,6 +162,7 @@ endif()
 
 if(FLATBUFFERS_BUILD_FLATHASH)
   add_executable(flathash ${FlatHash_SRCS})
+  target_compile_features(flathash PUBLIC cxx_std_17)
 endif()
 
 add_executable(resource-generator EXCLUDE_FROM_ALL ${CMAKE_CURRENT_SOURCE_DIR}/helpers/resource_generator.cpp)
@@ -184,11 +189,16 @@ if(FLATBUFFERS_BUILD_TESTS)
   compile_flatbuffers_schema_to_cpp(tests/monster_test.fbs)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/tests)
   add_executable(flattests ${FlatBuffers_Tests_SRCS})
+  target_compile_features(flattests PUBLIC cxx_std_17)
 
   compile_flatbuffers_schema_to_cpp(samples/monster.fbs)
   include_directories(${CMAKE_CURRENT_BINARY_DIR}/samples)
+
   add_executable(flatsamplebinary ${FlatBuffers_Sample_Binary_SRCS})
+  target_compile_features(flatsamplebinary PUBLIC cxx_std_17)
+
   add_executable(flatsampletext ${FlatBuffers_Sample_Text_SRCS})
+  target_compile_features(flatsampletext PUBLIC cxx_std_17)
 endif()
 
 if(FLATBUFFERS_INSTALL)
