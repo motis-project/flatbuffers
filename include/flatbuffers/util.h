@@ -233,7 +233,7 @@ inline std::string AbsolutePath(const std::string &filepath) {
 
 // Convert a unicode code point into a UTF-8 representation by appending it
 // to a string. Returns the number of bytes generated.
-inline int ToUTF8(uint32_t ucc, std::string *out) {
+inline int ToUTF8(uint32_t ucc, std::string* out) {
   assert(!(ucc & 0x80000000));  // Top bit can't be set.
   // 6 possible encodings: http://en.wikipedia.org/wiki/UTF-8
   for (int i = 0; i < 6; i++) {
@@ -244,7 +244,7 @@ inline int ToUTF8(uint32_t ucc, std::string *out) {
       uint32_t remain_bits = i * 6;
       // Store first byte:
       (*out) += static_cast<char>((0xFE << (max_bits - remain_bits)) |
-                                 (ucc >> remain_bits));
+                                  (ucc >> remain_bits));
       // Store remaining bytes:
       for (int j = i - 1; j >= 0; j--) {
         (*out) += static_cast<char>(((ucc >> (j * 6)) & 0x3F) | 0x80);
@@ -261,7 +261,7 @@ inline int ToUTF8(uint32_t ucc, std::string *out) {
 // advanced past all bytes parsed.
 // returns -1 upon corrupt UTF-8 encoding (ignore the incoming pointer in
 // this case).
-inline int FromUTF8(const char **in) {
+inline int FromUTF8(const char** in) {
   int len = 0;
   // Count leading 1 bits.
   for (int mask = 0x80; mask >= 0x04; mask >>= 1) {
@@ -271,14 +271,45 @@ inline int FromUTF8(const char **in) {
       break;
     }
   }
-  if ((**in << len) & 0x80) return -1;  // Bit after leading 1's must be 0.
+  if ((static_cast<unsigned char>(**in) << len) & 0x80)
+    return -1;  // Bit after leading 1's must be 0.
   if (!len) return *(*in)++;
+  // UTF-8 encoded values with a length are between 2 and 4 bytes.
+  if (len < 2 || len > 4) {
+    return -1;
+  }
   // Grab initial bits of the code.
   int ucc = *(*in)++ & ((1 << (7 - len)) - 1);
   for (int i = 0; i < len - 1; i++) {
     if ((**in & 0xC0) != 0x80) return -1;  // Upper bits must 1 0.
     ucc <<= 6;
     ucc |= *(*in)++ & 0x3F;  // Grab 6 more bits of the code.
+  }
+  // UTF-8 cannot encode values between 0xD800 and 0xDFFF (reserved for
+  // UTF-16 surrogate pairs).
+  if (ucc >= 0xD800 && ucc <= 0xDFFF) {
+    return -1;
+  }
+  // UTF-8 must represent code points in their shortest possible encoding.
+  switch (len) {
+    case 2:
+      // Two bytes of UTF-8 can represent code points from U+0080 to U+07FF.
+      if (ucc < 0x0080 || ucc > 0x07FF) {
+        return -1;
+      }
+      break;
+    case 3:
+      // Three bytes of UTF-8 can represent code points from U+0800 to U+FFFF.
+      if (ucc < 0x0800 || ucc > 0xFFFF) {
+        return -1;
+      }
+      break;
+    case 4:
+      // Four bytes of UTF-8 can represent code points from U+10000 to U+10FFFF.
+      if (ucc < 0x10000 || ucc > 0x10FFFF) {
+        return -1;
+      }
+      break;
   }
   return ucc;
 }
