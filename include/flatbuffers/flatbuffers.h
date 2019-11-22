@@ -244,16 +244,14 @@ template<typename T> struct IndirectHelper<const T *> {
 // An STL compatible iterator implementation for Vector below, effectively
 // calling Get() for every element.
 template<typename T, bool bConst>
-struct VectorIterator : public
-  std::iterator < std::input_iterator_tag,
-  typename std::conditional < bConst,
-  const typename IndirectHelper<T>::return_type,
-  typename IndirectHelper<T>::return_type > ::type, uoffset_t > {
-
-  typedef std::iterator<std::input_iterator_tag,
-    typename std::conditional<bConst,
-    const typename IndirectHelper<T>::return_type,
-    typename IndirectHelper<T>::return_type>::type, uoffset_t> super_type;
+struct VectorIterator {
+  typedef std::random_access_iterator_tag iterator_category;
+  typedef typename std::conditional < bConst,
+      const typename IndirectHelper<T>::return_type,
+      typename IndirectHelper<T>::return_type > ::type value_type;
+  typedef ptrdiff_t difference_type;
+  typedef value_type *pointer;
+  typedef value_type &reference;
 
 public:
   VectorIterator(const uint8_t *data, uoffset_t i) :
@@ -283,11 +281,11 @@ public:
     return (data_ - other.data_) / IndirectHelper<T>::element_stride;
   }
 
-  typename super_type::value_type operator *() const {
+  typename value_type operator *() const {
     return IndirectHelper<T>::Read(data_, 0);
   }
 
-  typename super_type::value_type operator->() const {
+  typename value_type operator->() const {
     return IndirectHelper<T>::Read(data_, 0);
   }
 
