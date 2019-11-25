@@ -91,7 +91,7 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
       ${fbs-compiler-flags} -std=c++17)
   endif(CYGWIN)
   set(fbs-compiler-flags
-    ${fbs-compiler-flags} -Wall -pedantic -Werror -Wextra -Werror=shadow)
+    ${fbs-compiler-flags} -Wall -pedantic -Werror -Wextra -Werror=shadow -Wno-implicit-fallthrough)
   if (GCC_VERSION VERSION_GREATER 4.4)
     set(fbs-compiler-flags
       ${fbs-compiler-flags} -Wunused-result -Werror=unused-result)
