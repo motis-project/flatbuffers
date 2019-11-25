@@ -300,6 +300,15 @@ public:
     return temp;
   }
 
+  VectorIterator &operator+=(const uoffset_t &offset) {
+    data_ += offset * IndirectHelper<T>::element_stride;
+    return *this;
+  }
+
+  VectorIterator &operator-=(const uoffset_t &offset) {
+    data_ -= offset * IndirectHelper<T>::element_stride;
+    return *this;
+  }
 private:
   const uint8_t *data_;
 };
