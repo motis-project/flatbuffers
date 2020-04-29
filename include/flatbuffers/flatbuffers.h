@@ -1041,8 +1041,7 @@ class FlatBufferBuilder
     }
     vector_downward& buf_;
 
-  private:
-    TableKeyComparator& operator= (const TableKeyComparator&);
+    TableKeyComparator& operator= (const TableKeyComparator&) = delete;
   };
   /// @endcond
 
